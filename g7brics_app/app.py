@@ -27,84 +27,6 @@ COLOR_MAP = {
     "BRICS" : "gold" 
 }
 
-st.set_page_config(
-    page_title='_Streamlit_ is :blue[cool] :sunglasses:',
-#    page_icon=page_icon,
-    layout="wide",
-    menu_items={
-        "About": "G7 vs BRICS",
-        "Get Help": "mailto:wangc1@gao.gov",
-    },
-)
-
-st.sidebar.title('G7 vs BRICS')
-#st.title('_Streamlit_ is :blue[cool] :sunglasses:')
-
-df_group, df_2000 = prepare_data()
-
-options = ["Geography", "Population", "Economy", "Health"]
-option = st.sidebar.radio("", options, index=0, label_visibility="collapsed")
-st.subheader(option)
-
-if option == options[0]:
-    fig = geography(df_2000)
-    st.plotly_chart(fig, use_container_width=True, theme="streamlit") 
-elif option == options[1]:  
-    with st.container(border=True):
-        fig = px.bar(
-            df_group,
-            x="Year",
-            y="Population (Billions)",
-            color="Group",
-            color_discrete_map=COLOR_MAP,
-            barmode="group"
-        )
-        st.plotly_chart(fig, use_container_width=True, theme="streamlit")    
-elif option == options[2]:
-    with st.expander(f"🔢 GDP PPP", expanded=True):
-        fig = px.bar(
-            df_group,
-            x="Year",
-            y="GDP PPP (Trillions $)",
-            color="Group",
-            color_discrete_map=COLOR_MAP,
-            barmode="group"
-        )   
-        st.plotly_chart(fig, use_container_width=True, theme="streamlit") 
-
-    with st.expander(f"🔢 GDP Per Capita", expanded=True):
-        fig = px.bar(
-            df_group,
-            x="Year",
-            y="GDP Per Capita PPP ($)",
-            color="Group",
-            color_discrete_map=COLOR_MAP,
-            barmode="group"
-        )
-        st.plotly_chart(fig, use_container_width=True, theme="streamlit")
-else:
-    with st.expander("🔢 Life Expentancy", expanded=True):
-        fig = px.bar(
-            df_group,
-            x="Year",
-            y="Life Expectancy (Years)",
-            color="Group",
-            color_discrete_map=COLOR_MAP,
-            barmode="group"
-        )
-        st.plotly_chart(fig, use_container_width=True, theme="streamlit")
-    with st.expander("🔢 Suicidal Mortality Rate", expanded=True):
-        fig = px.bar(
-            df_group,
-            x="Year",
-            y="Suicide Mortality Rate (Per 100k People)",
-            color="Group",
-            color_discrete_map=COLOR_MAP,
-            barmode="group"
-        )
-        st.plotly_chart(fig, use_container_width=True, theme="streamlit")
-
-        
 @st.cache_data    
 def prepare_data():
     df = pd.read_csv("wdx_wide.csv")
@@ -173,3 +95,83 @@ def geography(df_2000):
     fig.update_layout(margin=dict(l=0, r=0, t=0, b=0))
     
     return fig
+
+
+st.set_page_config(
+    page_title='_Streamlit_ is :blue[cool] :sunglasses:',
+#    page_icon=page_icon,
+    layout="wide",
+    menu_items={
+        "About": "G7 vs BRICS",
+        "Get Help": "mailto:wangc1@gao.gov",
+    },
+)
+
+st.sidebar.title('G7 vs BRICS')
+#st.title('_Streamlit_ is :blue[cool] :sunglasses:')
+
+df_group, df_2000 = prepare_data()
+
+options = ["Geography", "Population", "Economy", "Health"]
+option = st.sidebar.radio("", options, index=0, label_visibility="collapsed")
+st.subheader(option)
+
+if option == options[0]:
+    fig = geography(df_2000)
+    st.plotly_chart(fig, use_container_width=True, theme="streamlit") 
+elif option == options[1]:  
+    with st.container(border=True):
+        fig = px.bar(
+            df_group,
+            x="Year",
+            y="Population (Billions)",
+            color="Group",
+            color_discrete_map=COLOR_MAP,
+            barmode="group"
+        )
+        st.plotly_chart(fig, use_container_width=True, theme="streamlit")    
+elif option == options[2]:
+    with st.expander(f"🔢 GDP", expanded=True):
+        fig = px.bar(
+            df_group,
+            x="Year",
+            y="GDP PPP (Trillions $)",
+            color="Group",
+            color_discrete_map=COLOR_MAP,
+            barmode="group"
+        )   
+        st.plotly_chart(fig, use_container_width=True, theme="streamlit") 
+
+    with st.expander(f"🔢 GDP Per Capita", expanded=True):
+        fig = px.bar(
+            df_group,
+            x="Year",
+            y="GDP Per Capita PPP ($)",
+            color="Group",
+            color_discrete_map=COLOR_MAP,
+            barmode="group"
+        )
+        st.plotly_chart(fig, use_container_width=True, theme="streamlit")
+else:
+    with st.expander("🔢 Life Expentancy", expanded=True):
+        fig = px.bar(
+            df_group,
+            x="Year",
+            y="Life Expectancy (Years)",
+            color="Group",
+            color_discrete_map=COLOR_MAP,
+            barmode="group"
+        )
+        st.plotly_chart(fig, use_container_width=True, theme="streamlit")
+    with st.expander("🔢 Suicidal Mortality", expanded=True):
+        fig = px.bar(
+            df_group,
+            x="Year",
+            y="Suicide Mortality Rate (Per 100k People)",
+            color="Group",
+            color_discrete_map=COLOR_MAP,
+            barmode="group"
+        )
+        st.plotly_chart(fig, use_container_width=True, theme="streamlit")
+
+        
