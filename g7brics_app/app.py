@@ -1,6 +1,14 @@
 #!/usr/bin/env python3
 
 import pandas as pd
+
+# This is a workaround to eliminate the error: 
+# AttributeError: ‘DataFrame’ object has no attribute ‘iterItems’
+# The strange thing is this error only occurs when dlpoying the app in Domin. 
+# It does not appear when running the app in a workspace using the same environment:
+# 5.7 Domino Standard Environment Py3.9 R4.3.1
+pd.DataFrame.iteritems = pd.DataFrame.items
+
 import plotly.express as px
 import streamlit as st
   
@@ -24,13 +32,37 @@ BRICS = [
 
 COLOR_MAP = {
     "G7" : "#19D3F3",
-    "BRICS" : "gold" 
+    "BRICS" : "gold"   #"gold"
 }
 
+
+INDICATORS = [
+    "SP.POP.TOTL",
+    "NY.GDP.MKTP.PP.CD",
+    "NY.GDP.PCAP.PP.CD",
+    "SP.DYN.LE00.IN",
+    "SH.STA.SUIC.P5"
+]
+
+COLUMNS = [
+    "Population (Millions)",
+    "GDP PPP ($Trillions)",
+    "GDP Per Capita PPP ($)",
+    "Life Expectancy at Birth (Years)",
+    "Suicide Mortality Rate (Per 100K People)"
+]
+    
+    
 @st.cache_data    
 def prepare_data():
     df = pd.read_csv("wdx_wide.csv")
     df = df[df["Country Code"].isin(G7 + BRICS)]
+    df = df.rename(columns=dict(zip(INDICATORS, COLUMNS)))
+    df[COLUMNS[0]] = round(df[COLUMNS[0]] / 1000000, 2)
+    df[COLUMNS[1]] = round(df[COLUMNS[1]] / 1000000000000, 2)
+    df[COLUMNS[2]] = round(df[COLUMNS[2]], 2)
+    df[COLUMNS[3]] = round(df[COLUMNS[3]], 2)
+    df[COLUMNS[4]] = round(df[COLUMNS[4]], 2)
 
     def assign_group(row):
         if row["Country Code"] in G7:
@@ -42,28 +74,21 @@ def prepare_data():
         return row
 
     df = df.apply(assign_group, axis=1)
-    df_group = df.groupby(["Year", "Group"]).agg(
-        GDP=("NY.GDP.MKTP.PP.CD", "sum"),
-        GDP_PCAP=("NY.GDP.PCAP.PP.CD", "mean"),
-        POP=("SP.POP.TOTL", "sum"),
-        LIFE=("SP.DYN.LE00.IN", "mean"),
-        SUICIDE=("SH.STA.SUIC.P5", "mean")
-    ).reset_index()
+    df_group = df.groupby(["Year", "Group"]).agg({
+        COLUMNS[0] : "sum",
+        COLUMNS[1] : "sum",
+        COLUMNS[2] : "mean",
+        COLUMNS[3] : "mean",
+        COLUMNS[4] : "mean"
+    }).reset_index()
 
-    df_group["GDP PPP (Trillions $)"] = round(df_group["GDP"] / 1000000000000, 2)
-    df_group["GDP Per Capita PPP ($)"] = round(df_group["GDP_PCAP"], 2)
-    df_group["Population (Billions)"] = round(df_group["POP"] / 1000000000, 2)
-    df_group["Life Expectancy (Years)"] = round(df_group["LIFE"], 2)
-    df_group["Suicide Mortality Rate (Per 100k People)"] = round(df_group["SUICIDE"], 2)
-
-    df_2000 = df[df["Year"] == 2000]
     
-    return df_group, df_2000
+    return df, df_group
 
 
 @st.cache_data
-def geography(df_2000):
-    
+def geography(df):
+    df_2000 = df[df["Year"] == 2000]
     fig = px.choropleth(
         df_2000,
         locations='Country Code', 
@@ -97,81 +122,175 @@ def geography(df_2000):
     return fig
 
 
-st.set_page_config(
-    page_title='_Streamlit_ is :blue[cool] :sunglasses:',
-#    page_icon=page_icon,
-    layout="wide",
-    menu_items={
-        "About": "G7 vs BRICS",
-        "Get Help": "mailto:wangc1@gao.gov",
-    },
-)
+@st.cache_data
+def get_pie_charts(df, year, column):
+    figs = []
+    for group in ["G7", "BRICS"]:
+        fig = px.pie(     
+            df[(df["Group"] == group) & (df["Year"] == year)],
+            values=column,
+            color="Country Code",
+            hole=0.3,
+            names="Country Name",
+            title=f"{year} {group} {column}"
+        )
+        fig.update_traces(textposition='inside', textinfo='percent+label+value')
+        fig.update_layout(showlegend=False)
+        figs.append(fig)
+    return figs
+
+
+@st.cache_data
+def get_bar_charts(df, year, column):
+    figs = []
+    for group in ["G7", "BRICS"]:
+        fig = px.bar(     
+            df[(df["Group"] == group) & (df["Year"] == year)],
+            x=column,
+            color="Country Code",
+            y="Country Name",
+            title=f"{year} {group}"
+        )
+#        fig.update_traces(textposition='inside', textinfo='percent+label+value')
+        fig.update_layout(
+            showlegend=False,
+            yaxis={'categoryorder':'total descending', "title":""}
+        )
+        figs.append(fig)
+    return figs
+
+
 
 st.sidebar.title('G7 vs BRICS')
-#st.title('_Streamlit_ is :blue[cool] :sunglasses:')
 
-df_group, df_2000 = prepare_data()
+df, df_group = prepare_data()
 
-options = ["Geography", "Population", "Economy", "Health"]
+options = ["Geography", "Population", "Economy", "Health", "Data"]
 option = st.sidebar.radio("", options, index=0, label_visibility="collapsed")
+years = df["Year"].unique()
+years.sort()
+year = st.sidebar.slider("Year", years[0], years[-1])
 st.subheader(option)
 
 if option == options[0]:
-    fig = geography(df_2000)
-    st.plotly_chart(fig, use_container_width=True, theme="streamlit") 
+    with st.container(border=True):
+        fig = geography(df)
+        st.plotly_chart(fig, use_container_width=True, theme="streamlit") 
 elif option == options[1]:  
     with st.container(border=True):
         fig = px.bar(
             df_group,
-            x="Year",
-            y="Population (Billions)",
+            x="Year",     
+            y=COLUMNS[0],       # population
             color="Group",
             color_discrete_map=COLOR_MAP,
             barmode="group"
         )
-        st.plotly_chart(fig, use_container_width=True, theme="streamlit")    
+        st.plotly_chart(fig, use_container_width=True, theme="streamlit")  
+
+        pies = get_pie_charts(df, year, COLUMNS[0])
+        columns = st.columns(2)
+        with columns[0]:
+            st.plotly_chart(pies[0], use_container_width=True, theme="streamlit")    
+        with columns[1]:
+            st.plotly_chart(pies[1], use_container_width=True, theme="streamlit")   
+            
+        fig = px.sunburst(
+            df[df["Year"] == year],      
+            path=["Group", "Country Name"], 
+            values=COLUMNS[0],
+            title=f"{year} {COLUMNS[0]}",
+            color_discrete_map=COLOR_MAP
+        )
+        fig.update_traces(textinfo="label+value")
+        st.plotly_chart(fig, use_container_width=True, theme="streamlit") 
+        
+        fig = px.treemap(
+            df[df["Year"] == year], 
+            path=["Group", "Country Name"], 
+            values=COLUMNS[0],
+        )
+        fig.update_traces(textinfo="label+value")
+
+        st.plotly_chart(fig, use_container_width=True, theme="streamlit") 
+
 elif option == options[2]:
     with st.expander(f"🔢 GDP", expanded=True):
         fig = px.bar(
             df_group,
             x="Year",
-            y="GDP PPP (Trillions $)",
+            y=COLUMNS[1],      # GDP
             color="Group",
             color_discrete_map=COLOR_MAP,
             barmode="group"
         )   
         st.plotly_chart(fig, use_container_width=True, theme="streamlit") 
 
+        pies = get_pie_charts(df, year, COLUMNS[1])
+        columns = st.columns(2)      
+        with columns[0]:
+            st.plotly_chart(pies[0], use_container_width=True, theme="streamlit")    
+        with columns[1]:
+            st.plotly_chart(pies[1], use_container_width=True, theme="streamlit")               
+        
     with st.expander(f"🔢 GDP Per Capita", expanded=True):
         fig = px.bar(
             df_group,
             x="Year",
-            y="GDP Per Capita PPP ($)",
+            y=COLUMNS[2],    # GDP per capita
             color="Group",
             color_discrete_map=COLOR_MAP,
             barmode="group"
         )
         st.plotly_chart(fig, use_container_width=True, theme="streamlit")
-else:
+        
+        bars = get_bar_charts(df, year, COLUMNS[2])
+        columns = st.columns(2)
+        with columns[0]:
+            st.plotly_chart(bars[0], use_container_width=True, theme="streamlit")    
+        with columns[1]:
+            st.plotly_chart(bars[1], use_container_width=True, theme="streamlit") 
+        
+elif option == options[3]:
     with st.expander("🔢 Life Expentancy", expanded=True):
         fig = px.bar(
             df_group,
             x="Year",
-            y="Life Expectancy (Years)",
+            y=COLUMNS[3],
             color="Group",
             color_discrete_map=COLOR_MAP,
             barmode="group"
         )
         st.plotly_chart(fig, use_container_width=True, theme="streamlit")
+        
+        bars = get_bar_charts(df, year, COLUMNS[3])
+        columns = st.columns(2)
+        with columns[0]:
+            st.plotly_chart(bars[0], use_container_width=True, theme="streamlit")    
+        with columns[1]:
+            st.plotly_chart(bars[1], use_container_width=True, theme="streamlit") 
     with st.expander("🔢 Suicidal Mortality", expanded=True):
         fig = px.bar(
             df_group,
             x="Year",
-            y="Suicide Mortality Rate (Per 100k People)",
+            y=COLUMNS[4],
             color="Group",
             color_discrete_map=COLOR_MAP,
             barmode="group"
         )
         st.plotly_chart(fig, use_container_width=True, theme="streamlit")
-
         
+        bars = get_bar_charts(df, year, COLUMNS[4])
+        columns = st.columns(2)
+        with columns[0]:
+            st.plotly_chart(bars[0], use_container_width=True, theme="streamlit")    
+        with columns[1]:
+            st.plotly_chart(bars[1], use_container_width=True, theme="streamlit") 
+            
+else:
+    with st.expander("🔢 Data", expanded=True):
+        st.dataframe(df)
+        st.dataframe(df_group)
+
+
+
