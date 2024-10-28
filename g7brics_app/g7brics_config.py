@@ -31,8 +31,9 @@ BRICS= [
 
 
 COLOR_MAP = {
-    "G7" : "#19D3F3",
-    "BRICS" : "gold"   #"gold"
+    "REST OF WORLD" : "lightgreen",
+    "BRICS" : "orangered",  
+    "G7" : "MediumSlateBlue" 
 }
 
 
@@ -46,8 +47,16 @@ INDICATORS = [
 
 COLUMNS = [
     "Population (Millions)",
-    "GDP PPP ($Trillions)",
+    "GDP PPP ($Billions)",
     "GDP Per Capita PPP ($)",
     "Life Expectancy at Birth (Years)",
     "Suicide Mortality Rate (Per 100K People)"
+]
+
+TOPICS = ["Geography", "Population", "Economy", "Wealth", "Health", "Data"]
+
+TAB_OPTIONS = [
+    ":sunny: Historic Trend", 
+    ":sunny: By Year/Group",
+    ":sunny: By Year/Country"
 ]
