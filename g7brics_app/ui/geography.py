@@ -24,7 +24,6 @@ def geography(df):
         text=df_2020['Country Name'],
         mode='text',
         textfont_color="black",
-    #     textfont_style="bold",
         featureidkey='properties.name',
         showlegend=False
     )
@@ -40,6 +39,6 @@ def geography(df):
         orientation="h",
         title=None
     ))
-    fig.update_layout(margin=dict(l=1, r=1, t=1, b=1))
+    fig.update_layout(margin=dict(l=0.5, r=0.5, t=0.5, b=0.5))
 
     st.plotly_chart(fig, use_container_width=True, theme="streamlit") 

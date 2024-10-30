@@ -16,15 +16,26 @@ def size(df, df_group, year, gdp_measure):
 
     with st.expander(f"🔢 GDP {gdp_measure}", expanded=True):
         
-        title = "Time Trend and Percentage Share of Global GDP by G7 and BRICS"
-        fig_bar = viz.stacked_bar(df_group, column + " (%)", title)  
-        fig_bar.update_traces(
-            texttemplate='%{text}%', 
-            textposition='inside'  
-        )   
+
 
         tabs = st.tabs(config.TAB_OPTIONS + [":sunny: Sun Burst", ":sunny: Tree Map"])
         with tabs[0]:
+            fig_bar = viz.stacked_bar(
+                df_group, 
+                column + " (%)", 
+                "stack",
+                "Percentage Share", 
+                "%"
+            )  
+            st.plotly_chart(fig_bar, use_container_width=True, theme="streamlit") 
+
+            fig_bar = viz.stacked_bar(
+                df_group, 
+                column, 
+                "stack",
+                "Total GDP", 
+                "$"
+            )  
             st.plotly_chart(fig_bar, use_container_width=True, theme="streamlit") 
 
         fig_pie = viz.group_pie(df_group, column, year)

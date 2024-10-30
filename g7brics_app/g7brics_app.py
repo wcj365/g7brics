@@ -25,8 +25,8 @@ st.set_page_config(
 )
 
 st.sidebar.title('G7 vs BRICS')
-#lang = st.sidebar.selectbox("Language", config.LANGUAGES.keys())
-lang="English"
+lang = st.sidebar.selectbox("Language", config.LANGUAGES.keys())
+#lang="English"
 BRICS_OPTIONS = [
     "Original Members (5)",
     "All Members (5 + 4)",

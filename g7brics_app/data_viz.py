@@ -10,15 +10,16 @@ import streamlit as st
 import g7brics_config as config
 
 
-def stacked_bar(df, column, title):
+def stacked_bar(df, column, barmode, title, sign=None):
     fig = px.bar(
         df,
+        title=title,
         x="Year",     
         y=column,      
         color="Group",
         text=column,
         color_discrete_map=config.COLOR_MAP,
-        barmode="stack"
+        barmode=barmode
     )
 
     fig.update_layout(
@@ -28,8 +29,18 @@ def stacked_bar(df, column, title):
             xanchor="right",  # Anchor the legend's right
             yanchor="bottom", # Anchor the legend's bottom
             y=1.05,           # Slightly above the plot
-            title_text=None
         )
+    )
+
+    if sign == "$":
+        temp ='$%{text:,.0f}'
+    elif sign == "%":
+        temp ='%{text}%'
+    else:
+        temp = '%{text}'
+
+    fig.update_traces(
+        texttemplate=temp,  
     )
 
     return fig

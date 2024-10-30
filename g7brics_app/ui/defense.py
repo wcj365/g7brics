@@ -14,12 +14,22 @@ def size(df, df_group, year):
         tabs = st.tabs(config.TAB_OPTIONS + [":sunny: Sun Burst", ":sunny: Tree Map"])
 
         with tabs[0]:
-            title = "Time Trend and Percentage Share of Global Millitary Expenditure by G7 and BRICS"
-            fig_bar = viz.stacked_bar(df_group, config.COLUMNS[5] + " (%)", title)  
-            fig_bar.update_traces(
-                texttemplate='%{text}%', 
-                textposition='inside'  
-            )   
+            fig_bar = viz.stacked_bar(
+                df_group, 
+                config.COLUMNS[5] + " (%)", 
+                "stack",
+                "Percentage Share", 
+                "%"
+            )  
+            st.plotly_chart(fig_bar, use_container_width=True, theme="streamlit") 
+
+            fig_bar = viz.stacked_bar(
+                df_group, 
+                config.COLUMNS[5], 
+                "stack",
+                "Total", 
+                "$"
+            )  
             st.plotly_chart(fig_bar, use_container_width=True, theme="streamlit") 
 
         with tabs[1]:
@@ -50,12 +60,14 @@ def percent(df, df_group, year):
         tabs = st.tabs(config.TAB_OPTIONS)
 
         with tabs[0]:
-            title = "Time Trend and Percentage Share of Global Millitary Expenditure (% of GDP)"
-            fig_bar = viz.stacked_bar(df_group, config.COLUMNS[6], title)  
-            fig_bar.update_traces(
-                texttemplate='%{text}%', 
-                textposition='inside'  
-            )   
+
+            fig_bar = viz.stacked_bar(
+                df_group, 
+                config.COLUMNS[6], 
+                "stack",
+                "", 
+                "%"
+            )  
             st.plotly_chart(fig_bar, use_container_width=True, theme="streamlit") 
 
         with tabs[1]:

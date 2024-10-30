@@ -12,11 +12,24 @@ def population(df, df_group, year):
     with st.container(border=True):
         tabs = st.tabs(config.TAB_OPTIONS + [":sunny: Sun Burst", ":sunny: Tree Map"])
         with tabs[0]:
-            title = "Time Trend and Percentage Share of World Population by G7 and BRICS"
-            fig = viz.stacked_bar(df_group, config.COLUMNS[0] + " (%)", title)
-            fig.update_traces(
-                texttemplate='%{text}%',  
+
+            fig = viz.stacked_bar(
+                df_group, 
+                config.COLUMNS[0] + " (%)", 
+                "stack", 
+                "Percentage Share", 
+                "%"
             )
+
+            st.plotly_chart(fig, use_container_width=True, theme="streamlit")  
+
+            fig = viz.stacked_bar(
+                df_group, 
+                config.COLUMNS[0], 
+                "stack", 
+                "Total Population"
+            )
+
             st.plotly_chart(fig, use_container_width=True, theme="streamlit")  
            
         with tabs[1]:
