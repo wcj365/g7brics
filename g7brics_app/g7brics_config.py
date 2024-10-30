@@ -5,7 +5,6 @@ LANGUAGES = {
     "中文"    : "zh"
 }
 
-
 G7 = [
     "USA",
     "CAN",
@@ -16,17 +15,35 @@ G7 = [
     "JPN"
 ]
 
-
-BRICS= [
+FOUNDERS = [
     "BRA",
     "RUS",
     "IND",
     "CHN",
-    "ZAF",
+    "ZAF"
+]
+
+ADDITIONS = [
     "EGY",
     "ETH",
     "IRN",
     "SAU"
+]
+
+PARTNERS = [
+    "DZA",
+    "BLR",
+    "BOL",
+    "CUB",
+    "IDN",
+    "KAZ",
+    "MYS",
+    "NGA",
+    "THA",
+    "TUR",
+    "UGA",
+    "UZB",
+    "VNM"
 ]
 
 
@@ -42,18 +59,39 @@ INDICATORS = [
     "NY.GDP.MKTP.PP.CD",
     "NY.GDP.PCAP.PP.CD",
     "SP.DYN.LE00.IN",
-    "SH.STA.SUIC.P5"
+    "SH.STA.SUIC.P5",
+    "MS.MIL.XPND.CD",
+    "MS.MIL.XPND.GD.ZS",
+    "NY.GDP.MKTP.CD",
+    "NY.GDP.PCAP.CD"
 ]
 
 COLUMNS = [
-    "Population (Millions)",
+    "Population ($Millions)",
     "GDP PPP ($Billions)",
     "GDP Per Capita PPP ($)",
     "Life Expectancy at Birth (Years)",
-    "Suicide Mortality Rate (Per 100K People)"
+    "Suicide Mortality Rate (Per 100K People)",
+    "Military Expenditure ($Millions)",
+    "Military Expenditure (% of GDP)",
+    "GDP ($Billions)",
+    "GDP Per Capita ($)"
 ]
 
-TOPICS = ["Geography", "Population", "Economy", "Wealth", "Health", "Data"]
+TOPICS = [
+    "Geography", 
+    "Population", 
+    "Economy", 
+    "Defense",
+    "Wealth", 
+    "Health", 
+    "Data"
+]
+
+GDP_MEASURE = [
+    "Norminal Dollar", 
+    "Purching Power Parity (PPP)"
+]
 
 TAB_OPTIONS = [
     ":sunny: Historic Trend", 

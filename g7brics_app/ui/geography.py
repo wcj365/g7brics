@@ -5,7 +5,6 @@ import plotly.express as px
 import streamlit as st
 
 import g7brics_config as config
-import dataviz_utils as viz 
 
 
 def geography(df):

@@ -6,7 +6,7 @@ import streamlit as st
 
 
 import g7brics_config as config
-import dataviz_utils as viz 
+import data_viz as viz 
     
 
 def health(df, df_group, year):
@@ -21,14 +21,11 @@ def health(df, df_group, year):
             fig_bar = viz.group_bar(df_group, config.COLUMNS[3], year)
             st.plotly_chart(fig_bar, use_container_width=True, theme="streamlit") 
 
-
         with tabs[2]:
-            bars = viz.get_bar_charts(df, year, config.COLUMNS[3])
-            columns = st.columns(2)
-            with columns[0]:
-                st.plotly_chart(bars[0], use_container_width=True, theme="streamlit")    
-            with columns[1]:
-                st.plotly_chart(bars[1], use_container_width=True, theme="streamlit") 
+            df[config.COLUMNS[3]] = df[config.COLUMNS[3]].round(1) 
+            bar = viz.country_bar(df, config.COLUMNS[3], year)
+            st.plotly_chart(bar, use_container_width=True, theme="streamlit")    
+
     with st.expander("🔢 Suicide Mortality", expanded=True):
         title="Time Trend of Suicide Mortality Rate by G7 and BRICS"
         fig = viz.stacked_bar(df_group, config.COLUMNS[4], title)
@@ -40,11 +37,8 @@ def health(df, df_group, year):
             fig_bar = viz.group_bar(df_group, config.COLUMNS[4], year)
             st.plotly_chart(fig_bar, use_container_width=True, theme="streamlit") 
 
-        bars = viz.get_bar_charts(df, year, config.COLUMNS[4])
-        with tabs[2]:
-            columns = st.columns(2)
-            with columns[0]:
-                st.plotly_chart(bars[0], use_container_width=True, theme="streamlit")    
-            with columns[1]:
-                st.plotly_chart(bars[1], use_container_width=True, theme="streamlit") 
+        df[config.COLUMNS[4]] = df[config.COLUMNS[4]].round(1) 
+        bar = viz.country_bar(df, config.COLUMNS[4], year)
+        st.plotly_chart(bar, use_container_width=True, theme="streamlit")    
+ 
 

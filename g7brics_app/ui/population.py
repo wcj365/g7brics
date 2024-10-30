@@ -5,7 +5,7 @@ import plotly.express as px
 import streamlit as st
 
 import g7brics_config as config
-import dataviz_utils as viz 
+import data_viz as viz 
     
 
 def population(df, df_group, year):   
