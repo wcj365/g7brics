@@ -67,7 +67,7 @@ INDICATORS = [
 ]
 
 COLUMNS = [
-    "Population ($Millions)",
+    "Population (Millions)",
     "GDP PPP ($Billions)",
     "GDP Per Capita PPP ($)",
     "Life Expectancy at Birth (Years)",

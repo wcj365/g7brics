@@ -24,7 +24,7 @@ def population(df, df_group, year):
             st.plotly_chart(fig_pie, use_container_width=True, theme="streamlit") 
 
         with tabs[2]:
-            pies = viz.get_pie_charts(df, year, config.COLUMNS[0])
+            pies = viz.country_pie(df, year, config.COLUMNS[0])
             columns = st.columns(2)
             with columns[0]:
                 st.plotly_chart(pies[0], use_container_width=True, theme="streamlit")    

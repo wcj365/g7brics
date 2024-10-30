@@ -27,7 +27,7 @@ def size(df, df_group, year):
             st.plotly_chart(fig_pie, use_container_width=True, theme="streamlit") 
 
         with tabs[2]:
-            pies = viz.get_pie_charts(df, year, config.COLUMNS[5], dollar_sign=True)
+            pies = viz.country_pie(df, year, config.COLUMNS[5], dollar_sign=True)
             columns = st.columns(2)      
             with columns[0]:
                 st.plotly_chart(pies[0], use_container_width=True, theme="streamlit")    

@@ -31,7 +31,7 @@ def size(df, df_group, year, gdp_measure):
         with tabs[1]:
             st.plotly_chart(fig_pie, use_container_width=True, theme="streamlit") 
 
-        pies = viz.get_pie_charts(df, year, column, dollar_sign=True)
+        pies = viz.country_pie(df, year, column, dollar_sign=True)
         with tabs[2]:
             columns = st.columns(2)      
             with columns[0]:

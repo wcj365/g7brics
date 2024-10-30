@@ -52,9 +52,9 @@ def group_pie(df, column, year, dollar_sign=False):
         temp = '<b>%{label}</b><br>%{percent:.0%}<br>%{value:,.0f}'
 
     fig.update_traces(
-        textposition='inside', 
+        textposition='auto', 
         textinfo='percent+label+value',
-        texttemplate='<b>%{label}</b><br>%{percent:.0%}<br>$%{value:,.0f}',   
+        texttemplate=temp,   
         insidetextorientation='horizontal'  
     )
 
@@ -136,7 +136,7 @@ def country_bar(df, column, year, sign=None):
 
 
 @st.cache_data
-def get_pie_charts(df, year, column, dollar_sign=False):
+def country_pie(df, year, column, dollar_sign=False):
     figs = []
     for group in ["G7", "BRICS"]:
         fig = px.pie(     
@@ -155,9 +155,9 @@ def get_pie_charts(df, year, column, dollar_sign=False):
             temp = '<b>%{label}</b><br>%{percent:.0%}<br>%{value:,.0f}'
 
         fig.update_traces(
-            textposition='inside', 
+            textposition='auto', 
             textinfo='percent+label+value',
-            texttemplate='<b>%{label}</b><br>%{percent:.0%}<br>$%{value:,.0f}',   
+            texttemplate=temp,   
             insidetextorientation='horizontal'  
         )
         fig.update_layout(showlegend=False)
