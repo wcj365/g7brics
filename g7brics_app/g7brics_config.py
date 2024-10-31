@@ -98,3 +98,8 @@ TAB_OPTIONS = [
     ":sunny: By Year/Group",
     ":sunny: By Year/Country"
 ]
+ 
+TAB_OPT_EXTRA = [
+    ":sunny: Sun Burst", 
+    ":sunny: Tree Map"
+]

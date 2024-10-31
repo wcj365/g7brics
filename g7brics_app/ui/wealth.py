@@ -18,20 +18,15 @@ def wealth(df, df_group, year, gdp_measure):
         tabs = st.tabs(config.TAB_OPTIONS)
         with tabs[0]:
 
-            fig_bar = viz.stacked_bar(
+            viz.stacked_bar(
                 df_group, 
                 column, 
-                "stack",
-                "",
+                f"GDP Per Capita {gdp_measure}",
                 "$"
             )  
-            st.plotly_chart(fig_bar, use_container_width=True, theme="streamlit") 
 
         with tabs[1]:
-            fig_bar = viz.group_bar(df_group, column, year, "$")
-            st.plotly_chart(fig_bar, use_container_width=True, theme="streamlit") 
+            viz.group_bar(df_group, column, year, "$")
 
         with tabs[2]:
-            bar = viz.country_bar(df, column, year, "$")
-            st.plotly_chart(bar, use_container_width=True, theme="streamlit") 
-       
+            viz.country_bar(df, column, year, "$")   

@@ -10,44 +10,30 @@ import data_viz as viz
 
 def population(df, df_group, year):   
     with st.container(border=True):
-        tabs = st.tabs(config.TAB_OPTIONS + [":sunny: Sun Burst", ":sunny: Tree Map"])
+        tabs = st.tabs(config.TAB_OPTIONS + config.TAB_OPT_EXTRA)
         with tabs[0]:
 
-            fig = viz.stacked_bar(
+            viz.stacked_bar(
                 df_group, 
                 config.COLUMNS[0] + " (%)", 
-                "stack", 
                 "Percentage Share", 
                 "%"
             )
 
-            st.plotly_chart(fig, use_container_width=True, theme="streamlit")  
-
-            fig = viz.stacked_bar(
+            viz.stacked_bar(
                 df_group, 
                 config.COLUMNS[0], 
-                "stack", 
                 "Total Population"
             )
-
-            st.plotly_chart(fig, use_container_width=True, theme="streamlit")  
            
         with tabs[1]:
-            fig_pie = viz.group_pie(df_group, config.COLUMNS[0], year)
-            st.plotly_chart(fig_pie, use_container_width=True, theme="streamlit") 
+            viz.group_pie(df_group, config.COLUMNS[0], year)
 
         with tabs[2]:
-            pies = viz.country_pie(df, year, config.COLUMNS[0])
-            columns = st.columns(2)
-            with columns[0]:
-                st.plotly_chart(pies[0], use_container_width=True, theme="streamlit")    
-            with columns[1]:
-                st.plotly_chart(pies[1], use_container_width=True, theme="streamlit")   
+            viz.country_pie(df, year, config.COLUMNS[0])
 
         with tabs[3]:
-            fig = viz.sunburst(df, config.COLUMNS[0], year)
-            st.plotly_chart(fig, use_container_width=True, theme="streamlit") 
+            viz.sunburst(df, config.COLUMNS[0], year)
             
         with tabs[4]:
-            fig = viz.treemap(df, config.COLUMNS[0], year)
-            st.plotly_chart(fig, use_container_width=True, theme="streamlit") 
+            viz.treemap(df, config.COLUMNS[0], year)

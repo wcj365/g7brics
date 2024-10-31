@@ -14,7 +14,7 @@ from ui import health
 from ui import data
     
 
-st.set_page_config(
+st.set_page_config(      
     page_title='G7 vs BRICS',
  #   page_icon=page_icon,
     layout="wide",
@@ -22,7 +22,7 @@ st.set_page_config(
         "About": "G7 vs BRICS 1.0",
         "Get Help": "mailto:wcj365@gmail.com",
     },
-)
+)      
 
 st.sidebar.title('G7 vs BRICS')
 #lang = st.sidebar.selectbox("Language", config.LANGUAGES.keys())
