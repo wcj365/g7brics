@@ -89,8 +89,8 @@ TOPICS = [
 ]
 
 GDP_MEASURE = [
-    "Norminal Dollar", 
-    "Purching Power Parity (PPP)"
+    "Norminal", 
+    "PPP"
 ]
 
 TAB_OPTIONS = [
